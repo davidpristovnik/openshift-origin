@@ -46,7 +46,7 @@ ansible_become=yes
 openshift_install_examples=true
 deployment_type=origin
 openshift_release=v1.4
-openshift_image_tag=v1.4.0
+openshift_image_tag=v1.4.1
 docker_udev_workaround=True
 openshift_use_dnsmasq=false
 openshift_override_hostname_check=true
@@ -60,11 +60,11 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 
 # host group for masters
 [masters]
-$MASTER.$DOMAIN
+$MASTER.$DOMAIN ansible_connection=local
 
 # host group for nodes
 [nodes]
-$MASTER.$DOMAIN openshift_node_labels="{'region': 'master', 'zone': 'default'}"
+$MASTER.$DOMAIN openshift_node_labels="{'region': 'master', 'zone': 'default'}" openshift_schedulable=false
 $NODE-[0:${NODELOOP}].$DOMAIN openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
