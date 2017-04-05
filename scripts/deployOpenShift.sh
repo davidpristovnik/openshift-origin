@@ -45,10 +45,8 @@ ansible_ssh_user=$SUDOUSER
 ansible_become=yes
 openshift_install_examples=true
 deployment_type=origin
-#openshift_release=v1.4
-#openshift_image_tag=v1.4.1
 openshift_release=v1.5
-openshift_image_tag=v1.5.0
+#openshift_image_tag=v1.5.0
 docker_udev_workaround=True
 openshift_use_dnsmasq=false
 openshift_override_hostname_check=true
@@ -71,6 +69,10 @@ $NODE-[0:${NODELOOP}].$DOMAIN openshift_node_labels="{'region': 'infra', 'zone':
 EOF
 
 runuser -l $SUDOUSER -c "git clone https://github.com/openshift/openshift-ansible /home/$SUDOUSER/openshift-ansible"
+
+echo "Enable testing repository"
+
+runuser -l $SUDOUSER -c "sed -i -e '/\[centos-openshift-origin-testing\]/,/^\[/s/enabled=0/enabled=1/' /home/$SUDOUSER/openshift-ansible/roles/openshift_repos/files/origin/repos/openshift-ansible-centos-paas-sig.repo"
 
 echo "Executing Ansible playbook"
 
