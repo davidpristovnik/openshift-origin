@@ -52,7 +52,7 @@ openshift_use_dnsmasq=false
 openshift_override_hostname_check=true
 openshift_master_default_subdomain=$ROUTING
 
-openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
+openshift_master_cluster_public_hostname=$MASTER.$ROUTING
 openshift_master_cluster_public_vip=$MASTERPUBLICIPADDRESS
 
 # Enable htpasswd auth for username / password authentication
@@ -60,12 +60,12 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 
 # host group for masters
 [masters]
-$MASTER.$DOMAIN ansible_connection=local
+$MASTER ansible_connection=local
 
 # host group for nodes
 [nodes]
-$MASTER.$DOMAIN openshift_node_labels="{'region': 'master', 'zone': 'default'}" openshift_schedulable=false
-$NODE-[0:${NODELOOP}].$DOMAIN openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+$MASTER openshift_node_labels="{'region': 'master', 'zone': 'default'}" openshift_schedulable=false
+$NODE-[0:${NODELOOP}] openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
 runuser -l $SUDOUSER -c "git clone https://github.com/openshift/openshift-ansible /home/$SUDOUSER/openshift-ansible"
